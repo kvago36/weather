@@ -55,8 +55,13 @@ const Section = styled.section`
   position: relative;
   margin: 24px auto;
 
-  @media (max-width: 640px) {
+  @media (max-width: 1024px) {
+    max-width: 752px;
+  }
+
+  @media (max-width: 840px) {
     padding: 0 24px 24px 24px;
+    margin-bottom: 0;
   }
 `
 const Header = styled.header`
@@ -67,18 +72,33 @@ const SearchWidget = styled(Search)`
   position: absolute;
   top: -80px;
   right: 0;
+  width: 352px;
+
+  @media (max-width: 1024px) {
+    width: 278px;
+  }
+
+  @media (max-width: 840px) {
+    position: relative;
+    width: 100%;
+    top: 0;
+  }
 `
 
-const CardsList = styled.div`
+const CardsList = styled.main`
   display: grid;
-  grid-template-columns: 480px  480px;
+  grid-template-columns: 480px 480px;
   column-gap: 32px;
   row-gap: 24px;
   position: relative;
+  justify-items: center;
 
-  @media (max-width: 640px) {
-    grid-template-columns: 480px;
-    justify-items: center;
+  @media (max-width: 1024px) {
+    grid-template-columns: 360px 360px;
+  }
+
+  @media (max-width: 840px) {
+    grid-template-columns: 100%;
   }
 `
 
@@ -103,6 +123,14 @@ const Description = styled.p`
   width: 480px;
   line-height: 24px;
   margin-bottom: 32px;
+
+  @media (max-width: 1024px) {
+    width: 360px;
+  }
+
+  @media (max-width: 840px) {
+    width: auto;
+  }
 `
 
 export default App;

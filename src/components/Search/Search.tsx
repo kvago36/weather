@@ -123,7 +123,7 @@ const SearchInput = styled.input`
   padding: 12px 16px;
   font-family: ${props => props.theme.fonts.text};
   border: 0;
-  width: 272px;
+  width: calc(100% - 48px);
   line-height: 24px;
   font-size: 16px;
   outline: none;
