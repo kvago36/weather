@@ -5,7 +5,7 @@ import { get } from '../../fetcher'
 
 import { Coords } from '../../types'
 
-import { API_KEY } from '../../constants'
+import { API_KEY, API_REFRESH_RATE } from '../../constants'
 
 import Spinner from '../Spinner/Spinner'
 import Icon from '../Icon/Icon'
@@ -18,7 +18,7 @@ interface Props extends Coords {
 }
 
 const Card = (props: Props) => {
-  const { data, error } = useSWR(`/weather?units=metric&lat=${props.lat}&lon=${props.lon}&appid=${API_KEY}`, get)
+  const { data, error } = useSWR(`/weather?units=metric&lat=${props.lat}&lon=${props.lon}&appid=${API_KEY}`, get, { refreshInterval: API_REFRESH_RATE })
 
   if (error) return <Container>ошибка загрузки</Container>
   if (!data) return <Container>загрузка...</Container>
@@ -151,6 +151,7 @@ const Container = styled.div`
   background: ${props => props.theme.colors.white};
   border-radius: 24px;
   padding: 24px 32px;
+  width: calc(100% - 64px);
 `
 
 export default Card
