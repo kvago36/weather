@@ -1,4 +1,4 @@
-import { useState, UIEvent} from 'react'
+import { useState} from 'react'
 import styled, { ThemeProvider  } from 'styled-components'
 
 import Card from './components/Card/Card';
@@ -6,15 +6,20 @@ import Search from './components/Search/Search'
 import Logo from './components/Logo/Logo'
 
 import theme from './theme'
-import { City } from './types';
+import { City, SearchResult } from './types';
 
 import { citiesMocks } from './mocks'
 
 function App() {
   const [cities, setCities] = useState<City[]>(citiesMocks)
 
-  const handleCityInput = (event: UIEvent) => {
-    console.log(event)
+  const addCity = (city: SearchResult) => {
+    const payload: City = {
+      name: `${city.name} ${city.location}`,
+      coords: city.coordinates
+    }
+
+    setCities(value => value.concat([payload]))
   }
 
   return (
@@ -26,7 +31,7 @@ function App() {
           <Description>Simple but powerful weather forcasting service based on OpenWeatherMap API</Description>
         </Header>
         <CardsList>
-          <SearchWidget onChange={handleCityInput} />
+          <SearchWidget onAdd={addCity} />
 
           {
             cities.map((city: City) => <Card key={city.name} name={city.name} { ...city.coords } />)
@@ -40,7 +45,7 @@ function App() {
 const Section = styled.section`
   max-width: 994px;
   position: relative;
-  margin: 24px auto auto;
+  margin: 24px auto;
 
   @media (max-width: 640px) {
     padding: 0 24px 24px 24px;
