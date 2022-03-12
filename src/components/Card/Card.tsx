@@ -14,6 +14,7 @@ import weather from './weather.svg';
 
 interface Props extends Coords {
   name: string;
+  onIconClick: (name: string) => void;
 }
 
 const Card = (props: Props) => {
@@ -34,7 +35,7 @@ const Card = (props: Props) => {
         error && <p>ошибка загрузки</p>
       }
 
-      <DeleteButton><Icon size={18} color="#272525" className="icon-delete" /></DeleteButton>
+      <DeleteButton onClick={() => props.onIconClick(props.name)}><Icon size={18} color="#272525" className="icon-delete" /></DeleteButton>
 
       <TemperatureWrapper>
         <Temperature>{Math.round(data.main.temp)}<TemperatureCircle />C</Temperature>

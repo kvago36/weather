@@ -15,11 +15,19 @@ function App() {
 
   const addCity = (city: SearchResult) => {
     const payload: City = {
-      name: `${city.name} ${city.location}`,
+      name: `${city.name}, ${city.location}`,
       coords: city.coordinates
     }
 
+    if (cities.find((item: City) => item.name === payload.name)) {
+      return
+    }
+
     setCities(value => value.concat([payload]))
+  }
+
+  const deleteCity = (name: string) => {
+    setCities(value => value.filter((item: City) => item.name !== name))
   }
 
   return (
@@ -34,7 +42,7 @@ function App() {
           <SearchWidget onAdd={addCity} />
 
           {
-            cities.map((city: City) => <Card key={city.name} name={city.name} { ...city.coords } />)
+            cities.map((city: City) => <Card key={city.name} name={city.name} onIconClick={deleteCity} { ...city.coords } />)
           }
         </CardsList>
       </Section>

@@ -74,11 +74,11 @@ const Search = ({ onAdd, className }: Props) => {
                 <>
                   {
                     results.map(({ name, location, coordinates }: SearchResult) => (
-                      <FoundItem>
+                      <FoundItem key={`${name}, ${location}`}>
                         <ItemTitle>{`${name}, ${location}`}</ItemTitle>
                         <ItemCoords>{`${coordinates.lat} ${coordinates.lon}`}</ItemCoords>
-                        <AddItem>
-                          <Icon onClick={() => addCity({ name, location, coordinates })} size={20} className='icon-add' />
+                        <AddItem onClick={() => addCity({ name, location, coordinates })}>
+                          <Icon size={20} className='icon-add' />
                         </AddItem>
                         <ItemLine />
                       </FoundItem>
