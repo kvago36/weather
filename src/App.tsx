@@ -8,32 +8,10 @@ import Logo from './components/Logo/Logo'
 import theme from './theme'
 import { City } from './types';
 
-const mocks: City[] = [
-  {
-    name: 'London',
-    coords: {
-      lat: 35,
-      lon: 139
-    }
-  },
-  {
-    name: 'Moscow',
-    coords: {
-      lat: 35,
-      lon: 139
-    }
-  },
-  {
-    name: 'Amsterdam',
-    coords: {
-      lat: 35,
-      lon: 139
-    }
-  }
-]
+import { citiesMocks } from './mocks'
 
 function App() {
-  const [cities, setCities] = useState<City[]>(mocks)
+  const [cities, setCities] = useState<City[]>(citiesMocks)
 
   const handleCityInput = (event: UIEvent) => {
     console.log(event)
