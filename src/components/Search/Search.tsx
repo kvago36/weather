@@ -8,7 +8,7 @@ import { searchResults } from '../../mocks'
 import { SearchResult } from '../../types'
 
 type Props = {
-  onAdd: (event: any) => void,
+  onAdd: (city: SearchResult) => void,
   className?: string
 }
 
@@ -19,7 +19,7 @@ const Search = ({ onAdd, className }: Props) => {
   const [fetching, setFetching] = useState<boolean>(true)
   const [results, setResults] = useState<SearchResult[]>([])
 
-  const handleChange = (event: any) => setValue(event.target.value)
+  const handleChange = (event: React.FormEvent<HTMLInputElement>) => setValue(event.currentTarget.value)
 
   useEffect(() => {
     let timeout: number;
