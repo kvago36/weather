@@ -8,13 +8,13 @@ import { searchResults } from '../../mocks'
 import { SearchResult } from '../../types'
 
 type Props = {
-  onChange: (event: any) => void,
+  onAdd: (event: any) => void,
   className?: string
 }
 
 const SPINNER_TIMEOUT: number = 200
 
-const Search = ({ onChange, className }: Props) => {
+const Search = ({ onAdd, className }: Props) => {
   const [value, setValue] = useState<string>('')
   const [fetching, setFetching] = useState<boolean>(true)
   const [results, setResults] = useState<SearchResult[]>([])
@@ -39,6 +39,12 @@ const Search = ({ onChange, className }: Props) => {
     }
 
   }, [value])
+
+  const addCity = (city: SearchResult) => {
+    setValue('')
+    setResults([])
+    onAdd(city)
+  }
 
   const showCities = () => {
     setResults(searchResults)
@@ -68,10 +74,10 @@ const Search = ({ onChange, className }: Props) => {
                 <>
                   {
                     results.map(({ name, location, coordinates }: SearchResult) => (
-                      <FoundItem>
+                      <FoundItem key={`${name}, ${location}`}>
                         <ItemTitle>{`${name}, ${location}`}</ItemTitle>
                         <ItemCoords>{`${coordinates.lat} ${coordinates.lon}`}</ItemCoords>
-                        <AddItem>
+                        <AddItem onClick={() => addCity({ name, location, coordinates })}>
                           <Icon size={20} className='icon-add' />
                         </AddItem>
                         <ItemLine />
@@ -169,7 +175,7 @@ const SearchResults = styled.div`
   z-index: 2;
   top: 64px;
   border-radius: 8px;
-  transition: all .2s ease-in;
+  transition: all .1s ease-in;
 `
 
 const AddItem = styled.button`
