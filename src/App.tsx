@@ -6,9 +6,8 @@ import Search from './components/Search/Search'
 import Logo from './components/Logo/Logo'
 
 import theme from './theme'
-import { City, SearchResult } from './types';
 
-import { citiesMocks } from './mocks'
+import { City, SearchResult } from './types';
 
 function App() {
   const [cities, setCities] = useState<City[]>([])
