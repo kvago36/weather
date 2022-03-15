@@ -1,54 +1,28 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 
 import Icon from '../Icon/Icon'
-import Spinner from '../Spinner/Spinner'
 
-import { searchResults } from '../../mocks'
+import useThrottle from '../../hooks/useThrottle'
+
 import { SearchResult } from '../../types'
+
+import SearchList from './SearchList'
 
 type Props = {
   onAdd: (city: SearchResult) => void,
   className?: string
 }
 
-const SPINNER_TIMEOUT: number = 200
-
 const Search = ({ onAdd, className }: Props) => {
   const [value, setValue] = useState<string>('')
-  const [fetching, setFetching] = useState<boolean>(true)
-  const [results, setResults] = useState<SearchResult[]>([])
+  const throttledValue = useThrottle<string>(value)
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => setValue(event.currentTarget.value)
 
-  useEffect(() => {
-    let timeout: number;
-
-    if (!value) {
-      return
-    }
-
-    if (!fetching) {
-      setFetching(true)
-    }
-
-    timeout = window.setTimeout(showCities, SPINNER_TIMEOUT)
-
-    return () => {
-      clearTimeout(timeout)
-    }
-
-  }, [value])
-
   const addCity = (city: SearchResult) => {
     setValue('')
-    setResults([])
     onAdd(city)
-  }
-
-  const showCities = () => {
-    setResults(searchResults)
-    setFetching(false)
   }
 
   return (
@@ -59,47 +33,12 @@ const Search = ({ onAdd, className }: Props) => {
       </SearchButton>
 
       {
-        value && (
+        throttledValue && (
           <SearchResults>
-            {
-              fetching && (
-                <NotFound>
-                  <SearchSpinner />
-                </NotFound>
-              )
-            }
-
-            {
-              value && !fetching && value.toLowerCase() !== 'moscow' && (
-                <>
-                  {
-                    results.map(({ name, location, coordinates }: SearchResult) => (
-                      <FoundItem key={`${name}, ${location}`}>
-                        <ItemTitle>{`${name}, ${location}`}</ItemTitle>
-                        <ItemCoords>{`${coordinates.lat} ${coordinates.lon}`}</ItemCoords>
-                        <AddItem onClick={() => addCity({ name, location, coordinates })}>
-                          <Icon size={20} className='icon-add' />
-                        </AddItem>
-                        <ItemLine />
-                      </FoundItem>
-                    ))
-                  }
-                </>
-              )
-            }
-
-            {
-              value && !fetching && value.toLowerCase() === 'moscow' && (
-                <NotFound>
-                  <NotFoundTitle>City called “London” was not found</NotFoundTitle>
-                  <NotFoundSubTitle>Try different city name</NotFoundSubTitle>
-                </NotFound>
-              )
-            }
+            <SearchList value={throttledValue} onAdd={addCity} />
           </SearchResults>
         )
       }
-
     </SearchWrapper>
   )
 }
@@ -137,32 +76,6 @@ const SearchIcon = styled(Icon)`
   color: ${props => props.theme.colors.white};
 `
 
-const NotFound = styled.div`
-  margin: 0 auto;
-  padding: 20px 0;
-`
-
-const SearchSpinner = styled(Spinner)`
-  margin: 10px 0;
-`
-
-const NotFoundTitle = styled.h4`
-  font-size: 16px;
-  line-height: 24px;
-  margin: 0;
-  font-family: ${props => props.theme.fonts.text};
-  color: ${props => props.theme.colors.gray500};
-`
-
-const NotFoundSubTitle = styled.p`
-  text-align: center;
-  font-size: 14px;
-  line-height: 20px;
-  margin: 0;
-  font-family: ${props => props.theme.fonts.text};
-  color: ${props => props.theme.colors.gray400};
-`
-
 const SearchResults = styled.div`
   position: absolute;
   display: flex;
@@ -176,51 +89,6 @@ const SearchResults = styled.div`
   top: 64px;
   border-radius: 8px;
   transition: all .1s ease-in;
-`
-
-const AddItem = styled.button`
-  position: absolute;
-  top: 34px;
-  right: 26px;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  background-color: transparent;
-`
-
-const ItemLine = styled.div`
-  width: calc(100% - 50px);
-  height: 1px;
-  background-color: ${props => props.theme.colors.gray200};
-  position: absolute;
-  bottom: 0;
-`
-
-const ItemTitle = styled(NotFoundTitle)``
-
-const ItemCoords = styled(NotFoundSubTitle)`
-  text-align: start;
-`
-
-const FoundItem = styled.div`
-  display: flex;
-  position: relative;
-  padding: 20px 24px;
-  flex-flow: column;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${props => props.theme.colors.gray100};
-  }
-
-  &:last-child ${ItemLine} {
-    display: none;
-  }
-
-  &:hover ${ItemCoords},
-  &:hover ${ItemTitle} {
-    color: ${props => props.theme.colors.purple};
-  }
 `
 
 export default Search

@@ -1,32 +1,5 @@
 
-import { City, SearchResult } from './types'
-
-export const searchResults: SearchResult[] = [
-  {
-    name: 'London',
-    location: 'RU',
-    coordinates: {
-      lat: 37.129,
-      lon: -84.0833
-    }
-  },
-  {
-    name: 'London',
-    location: 'EN',
-    coordinates: {
-      lat: 37.129,
-      lon: -84.0833
-    }
-  },
-  {
-    name: 'London',
-    location: 'US',
-    coordinates: {
-      lat: 37.129,
-      lon: -84.0833
-    }
-  }
-]
+import { City } from './types'
 
 export const citiesMocks: City[] = [
   {
