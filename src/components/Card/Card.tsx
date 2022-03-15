@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { get } from '../../fetcher' 
 
-import { Coords } from '../../types'
+import { Coords, WeatherResponse } from '../../types'
 
 import { API_KEY, API_REFRESH_RATE } from '../../constants'
 
@@ -17,32 +17,32 @@ interface Props extends Coords {
   onIconClick: (name: string) => void;
 }
 
-const Card = (props: Props) => {
-  const { data, error } = useSWR(`/weather?units=metric&lat=${props.lat}&lon=${props.lon}&appid=${API_KEY}`, get, { refreshInterval: API_REFRESH_RATE })
+const Card = ({ lat, lon, name, onIconClick }: Props) => {
+  const { data, error } = useSWR<WeatherResponse>(`/data/2.5/weather?lang=en&units=metric&lat=${lat}&lon=${lon}&appid=${API_KEY}`, get, { refreshInterval: API_REFRESH_RATE })
 
-  if (error) return <Container>ошибка загрузки</Container>
-  if (!data) return <Container>загрузка...</Container>
+  if (error) return (
+    <Container>
+      <ErrorTitle>Error!</ErrorTitle>
+      <ErrorText>Unable to get information about weather in <ErrorCity>{name}</ErrorCity></ErrorText>
+    </Container>
+  )
+
+  if (!data) return (
+    <Container><Spinner /></Container>
+  )
 
   return (
     <Container>
-      <CityName>{props.name}</CityName>
+      <CityName>{name}</CityName>
 
-      {
-        !data && <Spinner />
-      }
-
-      {
-        error && <p>ошибка загрузки</p>
-      }
-
-      <DeleteButton onClick={() => props.onIconClick(props.name)}><Icon size={18} color="#272525" className="icon-delete" /></DeleteButton>
+      <DeleteButton onClick={() => onIconClick(name)}><Icon size={18} color="#272525" className="icon-delete" /></DeleteButton>
 
       <TemperatureWrapper>
         <Temperature>{Math.round(data.main.temp)}<TemperatureCircle />C</Temperature>
         <img width={48} height={48} src={weather} alt="weather" />
       </TemperatureWrapper>
 
-      <Label>Broken clouds</Label>
+      <Label>{data.weather[0].description}</Label>
       
       <Line />
 
@@ -100,6 +100,28 @@ const Temperature = styled.span`
   line-height: 100%;
 `
 
+const ErrorTitle = styled.h4`
+  margin: 0;
+  font-family: ${props => props.theme.fonts.text};
+  font-size: 16px;
+  line-height: 24px;
+  color: ${props => props.theme.colors.gray500};
+`
+
+const ErrorCity = styled.span`
+  font-weight: bold;
+  color: ${props => props.theme.colors.purple};
+  text-transform: uppercase;
+`
+
+const ErrorText = styled.p`
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0;
+  font-family: ${props => props.theme.fonts.text};
+  color: ${props => props.theme.colors.gray400};
+`
+
 const TemperatureCircle = styled.span`
   height: 7px;
   width: 7px;
@@ -140,6 +162,7 @@ const Line = styled.hr`
 const Label = styled.p`
   color: ${props => props.theme.colors.gray400};
   font-family: ${props => props.theme.fonts.text};
+  text-transform: capitalize;
   font-size: 14px;
   line-height: 20px;
   margin-top: 8px;

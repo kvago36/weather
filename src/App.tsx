@@ -11,7 +11,7 @@ import { City, SearchResult } from './types';
 import { citiesMocks } from './mocks'
 
 function App() {
-  const [cities, setCities] = useState<City[]>(citiesMocks)
+  const [cities, setCities] = useState<City[]>([])
 
   const addCity = (city: SearchResult) => {
     const payload: City = {
